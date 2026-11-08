@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="uk" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LinguaPrime — Вивчай англійську з найкращими викладачами</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                        },
+                        accent: {
+                            purple: '#a855f7',
+                            pink: '#ec4899',
+                            cyan: '#06b6d4',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        heading: ['Syne', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Syne:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: #0b0f19;
+            color: #f3f4f6;
+            overflow-x: hidden;
+        }
+
+        .font-heading {
+            font-family: 'Syne', sans-serif;
+        }
+
+        /* Glassmorphism elements */
+        .glass-card {
+            background: rgba(17, 24, 39, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .glass-card-hover {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .glass-card-hover:hover {
+            transform: translateY(-6px);
+            border-color: rgba(99, 102, 241, 0.4);
+            box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.25);
+        }
+
+        .glass-nav {
+            background: rgba(11, 15, 25, 0.85);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Animated Floating 3D/Glass Books & Particles Background */
+        .bg-floating-container {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .floating-book {
+            position: absolute;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(168, 85, 247, 0.1));
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            animation: floatBook 14s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatBook {
+            0% {
+                transform: translateY(0px) rotate(0deg) scale(1);
+            }
+            50% {
+                transform: translateY(-40px) rotate(12deg) scale(1.05);
+            }
+            100% {
+                transform: translateY(20px) rotate(-8deg) scale(0.95);
+            }
+        }
+
+        /* Glowing Orbs background */
+        .glow-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.35;
+            pointer-events: none;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0f19;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1f2937;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #4f46e5;
+        }
+
+        /* Gradient Text */
+        .gradient-text {
+            background: linear-gradient(135deg, #a855f7 0%, #6366f1 50%, #06b6d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .gradient-text-gold {
+            background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+    </style>
+</head>
+<body class="relative min-h-screen flex flex-col justify-between selection:bg-brand-500 selection:text-white">
+
+    <!-- Background Dynamic Animations -->
+    <div class="bg-floating-container">
+        <!-- Glowing Ambient Lights -->
+        <div class="glow-orb w-96 h-96 bg-brand-600 top-10 left-10"></div>
+        <div class="glow-orb w-[30rem] h-[30rem] bg-accent-purple bottom-20 right-10"></div>
+        <div class="glow-orb w-80 h-80 bg-accent-cyan top-1/2 left-1/3"></div>
+
+        <!-- Animated Floating Glass Books -->
+        <div class="floating-book w-16 h-20 top-[15%] left-[8%]" style="animation-duration: 12s; animation-delay: 0s;">
+            <i class="fa-solid fa-book-open text-brand-400 text-2xl"></i>
+        </div>
+        <div class="floating-book w-20 h-24 top-[65%] left-[5%]" style="animation-duration: 16s; animation-delay: -3s;">
+            <i class="fa-solid fa-graduation-cap text-accent-purple text-3xl"></i>
+        </div>
+        <div class="floating-book w-14 h-18 top-[25%] right-[10%]" style="animation-duration: 11s; animation-delay: -5s;">
+            <i class="fa-solid fa-language text-accent-cyan text-2xl"></i>
+        </div>
+        <div class="floating-book w-24 h-28 top-[75%] right-[8%]" style="animation-duration: 18s; animation-delay: -2s;">
+            <i class="fa-solid fa-book text-brand-400 text-3xl"></i>
+        </div>
+        <div class="floating-book w-16 h-20 top-[45%] right-[22%]" style="animation-duration: 14s; animation-delay: -7s;">
+            <i class="fa-solid fa-award text-yellow-400 text-2xl"></i>
+        </div>
+    </div>
+
+    <!-- Navigation Bar -->
+    <nav class="sticky top-0 z-40 glass-nav">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            
+            <!-- Logo -->
+            <a href="#" class="flex items-center gap-3 group">
+                <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-brand-600 to-accent-purple flex items-center justify-center shadow-lg shadow-brand-500/30 group-hover:scale-105 transition-transform duration-300">
+                    <i class="fa-solid fa-bolt text-white text-xl"></i>
+                </div>
+                <span class="text-2xl font-bold font-heading tracking-tight">
+                    Lingua<span class="gradient-text">Prime</span>
+                </span>
+            </a>
+
+            <!-- Desktop Nav Links -->
+            <div class="hidden md:flex items-center gap-8 text-sm font-semibold text-gray-300">
+                <a href="#teachers" class="hover:text-brand-400 transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-user-graduate text-xs"></i> Вчителі
+                </a>
+                <a href="#ratings" class="hover:text-brand-400 transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-star text-xs text-yellow-400"></i> Рейтинг
+                </a>
+                <a href="#reviews" class="hover:text-brand-400 transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-comment-dots text-xs"></i> Відгуки
+                </a>
+                <a href="#about" class="hover:text-brand-400 transition-colors flex items-center gap-1.5">
+                    <i class="fa-solid fa-circle-info text-xs"></i> Про нас
+                </a>
+            </div>
+
+            <!-- Action Buttons / Cabinet -->
+            <div class="flex items-center gap-4">
+                <button onclick="toggleCabinetModal()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-brand-600 via-accent-purple to-brand-500 hover:opacity-95 text-white font-semibold text-sm shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 transition-all duration-300 flex items-center gap-2">
+                    <i class="fa-solid fa-user-circle text-lg"></i>
+                    <span>Особистий кабінет</span>
+                </button>
+
+                <!-- Mobile Menu Toggle -->
+                <button onclick="toggleMobileMenu()" class="md:hidden text-gray-400 hover:text-white p-2 text-xl">
+                    <i class="fa-solid fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Mobile Menu Dropdown -->
+        <div id="mobile-menu" class="hidden md:hidden border-t border-gray-800 bg-gray-950/95 px-4 py-4 space-y-3">
+            <a href="#teachers" onclick="toggleMobileMenu()" class="block text-gray-300 py-2 hover:text-brand-400">Вчителі</a>
+            <a href="#ratings" onclick="toggleMobileMenu()" class="block text-gray-300 py-2 hover:text-brand-400">Рейтинг</a>
+            <a href="#reviews" onclick="toggleMobileMenu()" class="block text-gray-300 py-2 hover:text-brand-400">Відгуки</a>
+            <a href="#about" onclick="toggleMobileMenu()" class="block text-gray-300 py-2 hover:text-brand-400">Про нас</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="relative z-10 pt-12 pb-16 md:pt-20 md:pb-24 px-4 text-center max-w-4xl mx-auto">
+        <span class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-brand-500/10 border border-brand-500/20 text-brand-400 text-xs sm:text-sm font-semibold mb-6 animate-pulse">
+            <i class="fa-solid fa-sparkles"></i> Найвища якість онлайн-навчання в Україні
+        </span>
+        <h1 class="text-4xl sm:text-6xl md:text-7xl font-extrabold font-heading tracking-tight leading-tight mb-6">
+            Заговори англійською <br>
+            <span class="gradient-text">вільно та впевнено</span>
+        </h1>
+        <p class="text-lg sm:text-xl text-gray-400 mb-8 max-w-2xl mx-auto font-normal">
+            Обирай топових сертифікованих репетиторів, підбирай зручний графік та отримуй результат вже після першого місяця занять.
+        </p>
+
+        <!-- Quick Stats Banner -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 max-w-3xl mx-auto mt-12 text-left">
+            <div class="glass-card p-4 rounded-2xl border border-gray-800">
+                <div class="text-2xl font-bold font-heading text-white mb-1">98.4%</div>
+                <div class="text-xs text-gray-400">Задоволених студентів</div>
+            </div>
+            <div class="glass-card p-4 rounded-2xl border border-gray-800">
+                <div class="text-2xl font-bold font-heading text-white mb-1">15,000+</div>
+                <div class="text-xs text-gray-400">Проведених уроків</div>
+            </div>
+            <div class="glass-card p-4 rounded-2xl border border-gray-800">
+                <div class="text-2xl font-bold font-heading text-white mb-1">4.95 ★</div>
+                <div class="text-xs text-gray-400">Середній рейтинг</div>
+            </div>
+            <div class="glass-card p-4 rounded-2xl border border-gray-800">
+                <div class="text-2xl font-bold font-heading text-white mb-1">24/7</div>
+                <div class="text-xs text-gray-400">Підтримка та заняття</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Teachers Showcase Section -->
+    <section id="teachers" class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+            <div>
+                <h2 class="text-3xl sm:text-5xl font-bold font-heading mb-3">
+                    Наші кращі <span class="gradient-text">Викладачі</span>
+                </h2>
+                <p class="text-gray-400 max-w-xl">
+                    Оберіть репетитора відповідно до ваших цілей: підготовка до міжнародних іспитів, бізнес-англійська чи розмовний інтенсив.
+                </p>
+            </div>
+            <div class="mt-4 md:mt-0 flex gap-2">
+                <span class="text-xs bg-gray-800 text-gray-300 px-3 py-1.5 rounded-lg border border-gray-700 flex items-center gap-1.5">
+                    <i class="fa-solid fa-filter text-brand-400"></i> Всі рівня (A1-C2)
+                </span>
+            </div>
+        </div>
+
+        <!-- Teachers Grid (3 Teachers) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            
+            <!-- TEACHER 1: Ostap Taras -->
+            <div class="glass-card glass-card-hover rounded-3xl p-6 flex flex-col justify-between relative overflow-hidden group">
+                <div class="absolute top-4 right-4 bg-yellow-500/10 border border-yellow-500/30 px-3 py-1 rounded-full flex items-center gap-1 text-xs font-bold text-yellow-400">
+                    <i class="fa-solid fa-star"></i> 2 (12 відгуків)
+                </div>
+
+                <div>
+                    <!-- Avatar & Info -->
+                    <div class="relative w-24 h-24 mb-5 rounded-2xl overflow-hidden border-2 border-brand-500/40">
+                        <img src="ostap.png" alt="Ostap Taras" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                    
+                    <h3 class="text-2xl font-bold text-white font-heading mb-1">Ostap Taras</h3>
+                    <p class="text-brand-400 text-xs font-semibold uppercase tracking-wider mb-3">Native Speaker (Львів)</p>
+                    
+                    <p class="text-gray-300 text-sm mb-4 line-clamp-3">
+                        Спеціаліст підготовки до IELTS та BDSM. 1+ років досвіду. Допоможу подолати мовний бар'єр та здобути бали 4+!
+                    </p>
+
+                    <!-- Tags -->
+                    <div class="flex flex-wrap gap-1.5 mb-6">
+                        <span class="text-[11px] bg-gray-800/80 text-gray-300 px-2.5 py-1 rounded-md border border-gray-700">ANAL / BDSN</span>
+                        <span class="text-[11px] bg-gray-800/80 text-gray-300 px-2.5 py-1 rounded-md border border-gray-700">Носій мови</span>
+                        <span class="text-[11px] bg-gray-800/80 text-gray-300 px-2.5 py-1 rounded-md border border-gray-700">Рівень A1-C2</span>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-gray-800/80 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs text-gray-400 block">Вартість уроку:</span>
+                        <span class="text-xl font-bold text-white font-heading">250 <span class="text-xs text-brand-400 font-normal">грн/год</span></span>
+                    </div>
+                    <button onclick="openTeacherModal(0)" class="px-4 py-2.5 bg-brand-600/30 hover:bg-brand-600 text-brand-300 hover:text-white border border-brand-500/40 rounded-xl text-sm font-semibold transition-all flex items-center gap-1.5">
+                        Профіль <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- TEACHER 2: Ruslan Kliuchko -->
+            <div class="glass-card glass-card-hover rounded-3xl p-6 flex flex-col justify-between relative overflow-hidden group">
+                <div class="absolute top-4 right-4 bg-yellow-500/10 border border-yellow-500/30 px-3 py-1 rounded-full flex items-center gap-1 text-xs font-bold text-yellow-400">
+                    <i class="fa-solid fa-star"></i> 1 (1 відгуків)
+                </div>
+
+                <div>
+                    <!-- Avatar & Info -->
+                    <div class="relative w-24 h-24 mb-5 rounded-2xl overflow-hidden border-2 border-accent-purple/40">
+                        <img src="ruslan.png" alt="Ruslan Kluichko" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                    
+                    <h3 class="text-2xl font-bold text-white font-heading mb-1">Ruslan Kliuchko</h3>
+                    <p class="text-accent-purple text-xs font-semibold uppercase tracking-wider mb-3">Business English & SLUT-boy</p>
+                    
+                    <p class="text-gray-300 text-sm mb-4 line-clamp-3">
+                        Готую до співбесід в IT компаніях, пітчингів та ділових переговорів+ виїзд на дому . Практичний підхід без нудної теорії.
+                    </p>
+
+                    <!-- Tags -->
+                    <div class="flex flex-wrap gap-1.5 mb-6">
+                        <span class="text-[11px] bg-gray-800/80 text-gray-300 px-2.5 py-1 rounded-md border border-gray-700">Business English</span>
+                        <span class="text-[11px] bg-gray-800/80 text-gray-300 px-2.5 py-1 rounded-md border border-gray-700">IT термінологія</span>
+                        <span class="text-[11px] bg-gray-800/80 text-gray-300 px-2.5 py-1 rounded-md border border-gray-700">B1-C1</span>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-gray-800/80 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs text-gray-400 block">Вартість уроку:</span>
+                        <span class="text-xl font-bold text-white font-heading">100 <span class="text-xs text-accent-purple font-normal">грн/год</span></span>
+                    </div>
+                    <button onclick="openTeacherModal(1)" class="px-4 py-2.5 bg-accent-purple/20 hover:bg-accent-purple text-purple-300 hover:text-white border border-accent-purple/40 rounded-xl text-sm font-semibold transition-all flex items-center gap-1.5">
+                        Профіль <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- TEACHER 3: Yulianna Just  -->
+            <div class="glass-card glass-card-hover rounded-3xl p-6 flex flex-col justify-between relative overflow-hidden group">
+                <div class="absolute top-4 right-4 bg-yellow-500/10 border border-yellow-500/30 px-3 py-1 rounded-full flex items-center gap-1 text-xs font-bold text-yellow-400">
+                    <i class="fa-solid fa-star"></i> 5.0 (1140 відгуків)
+                </div>
+
+                <div>
+                    <!-- Avatar & Info -->
+                    <div class="relative w-24 h-24 mb-5 rounded-2xl overflow-hidden border-2 border-accent-cyan/40">
+                        <img src="yu.jpg" alt="Olena Kovalenko" class="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500">
+                    </div>
+                    
+                    <h3 class="text-2xl font-bold text-white font-heading mb-1">Yulianna Just</h3>
+                    <p class="text-accent-cyan text-xs font-semibold uppercase tracking-wider mb-3">Розмовна англійська для початківців</p>
+                    
+                    <p class="text-gray-300 text-sm mb-4 line-clamp-3">
+                        З нуля до впевненого мовлення! Інтерактивні методики, ігрові формати та максимальна підтримка на кожному етапі.
+                    </p>
+
+                    <!-- Tags -->
+                    <div class="flex flex-wrap gap-1.5 mb-6">
+                        <span class="text-[11px] bg-gray-800/80 text-gray-300 px-2.5 py-1 rounded-md border border-gray-700">Початківці (A0-B1)</span>
+                        <span class="text-[11px] bg-gray-800/80 text-gray-300 px-2.5 py-1 rounded-md border border-gray-700">Легка граматика</span>
+                        <span class="text-[11px] bg-gray-800/80 text-gray-300 px-2.5 py-1 rounded-md border border-gray-700">Розмовний клуб</span>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-gray-800/80 flex items-center justify-between">
+                    <div>
+                        <span class="text-xs text-gray-400 block">Вартість уроку:</span>
+                        <span class="text-xl font-bold text-white font-heading">1000 <span class="text-xs text-accent-cyan font-normal">грн/год</span></span>
+                    </div>
+                    <button onclick="openTeacherModal(2)" class="px-4 py-2.5 bg-accent-cyan/20 hover:bg-accent-cyan text-cyan-300 hover:text-white border border-accent-cyan/40 rounded-xl text-sm font-semibold transition-all flex items-center gap-1.5">
+                        Профіль <i class="fa-solid fa-arrow-right text-xs"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- Ratings Summary Table Section -->
+    <section id="ratings" class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="glass-card rounded-3xl p-6 sm:p-8 border border-gray-800">
+            <div class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                <div>
+                    <h3 class="text-2xl font-bold font-heading text-white">Рейтинг та Порівняння Вчителів</h3>
+                    <p class="text-gray-400 text-sm">Прозорі дані на основі реальних оцінок та успіхів студентів</p>
+                </div>
+                <div class="flex items-center gap-2 bg-gray-900/80 px-4 py-2 rounded-xl border border-gray-800">
+                    <i class="fa-solid fa-shield-halved text-brand-400"></i>
+                    <span class="text-xs font-medium text-gray-300">Всі відгуки верифіковані</span>
+                </div>
+            </div>
+
+            <!-- Responsive Table -->
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm text-gray-300">
+                    <thead class="bg-gray-900/60 text-xs uppercase text-gray-400 border-b border-gray-800">
+                        <tr>
+                            <th class="py-3 px-4">Викладач</th>
+                            <th class="py-3 px-4">Спеціалізація</th>
+                            <th class="py-3 px-4 text-center">Рейтинг</th>
+                            <th class="py-3 px-4 text-center">Проведено уроків</th>
+                            <th class="py-3 px-4 text-right">Ціна / год</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-800/60">
+                        <tr class="hover:bg-gray-800/30 transition-colors">
+                            <td class="py-4 px-4 font-semibold text-white flex items-center gap-3">
+                                <img src="ostap.png" class="w-9 h-9 rounded-full object-cover">
+                                Ostap Taras
+                            </td>
+                            <td class="py-4 px-4 text-gray-400">IELTS, BDSN, Speaking</td>
+                            <td class="py-4 px-4 text-center font-bold text-yellow-400">★ 2</td>
+                            <td class="py-4 px-4 text-center">12+</td>
+                            <td class="py-4 px-4 text-right font-bold text-brand-400">250 грн</td>
+                        </tr>
+                        <tr class="hover:bg-gray-800/30 transition-colors">
+                            <td class="py-4 px-4 font-semibold text-white flex items-center gap-3">
+                                <img src="ruslan.png" class="w-9 h-9 rounded-full object-cover">
+                                Ruslan Kliuchko
+                            </td>
+                            <td class="py-4 px-4 text-gray-400">Business, IT, BLug-Boy</td>
+                            <td class="py-4 px-4 text-center font-bold text-yellow-400">★ 2</td>
+                            <td class="py-4 px-4 text-center">2+</td>
+                            <td class="py-4 px-4 text-right font-bold text-purple-400">100 грн</td>
+                        </tr>
+                        <tr class="hover:bg-gray-800/30 transition-colors">
+                            <td class="py-4 px-4 font-semibold text-white flex items-center gap-3">
+                                <img src="yu.jpg" class="w-9 h-9 rounded-full object-cover">
+                                Yulianna Just
+                            </td>
+                            <td class="py-4 px-4 text-gray-400">General English, Grammar</td>
+                            <td class="py-4 px-4 text-center font-bold text-yellow-400">★ 5.0</td>
+                            <td class="py-4 px-4 text-center">1,890+</td>
+                            <td class="py-4 px-4 text-right font-bold text-cyan-400">1000 грн</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reviews & User Submission Section -->
+    <section id="reviews" class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl sm:text-5xl font-bold font-heading mb-3">Відгуки наших <span class="gradient-text">Студентів</span></h2>
+            <p class="text-gray-400">Дізнайтесь, як наші викладачі допомагають досягати реальних результатів</p>
+        </div>
+
+        <!-- Student Reviews List -->
+        <div id="reviews-container" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            <!-- Review 1 -->
+            <div class="glass-card p-6 rounded-2xl border border-gray-800 flex flex-col justify-between">
+                <p class="text-gray-300 text-sm italic mb-6">
+                    "Займаюся з Ruslan Kliuchko вже 3 місяці. Завдяки його методиці склав IELTS на 7.5 та отримав оффер в університет у Лондоні! Руслан найкращий!"
+                </p>
+                <div class="flex items-center gap-3 border-t border-gray-800 pt-4">
+                    <div class="w-10 h-10 rounded-full bg-brand-500/20 text-brand-400 flex items-center justify-center font-bold">
+                        ДМ
+                    </div>
+                    <div>
+                        <div class="text-sm font-semibold text-white">Дмитро Мельник</div>
+                        <div class="text-xs text-yellow-400">★ ★ ★ ★ ★ (Студент Руслана)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review 2 -->
+            <div class="glass-card p-6 rounded-2xl border border-gray-800 flex flex-col justify-between">
+                <p class="text-gray-300 text-sm italic mb-6">
+                    "Ostap Taras допоміг мені підготуватися до технічної співбесіди в американську компанію. Ми пропрацювали всі кейси і я успішно пройшов!"
+                </p>
+                <div class="flex items-center gap-3 border-t border-gray-800 pt-4">
+                    <div class="w-10 h-10 rounded-full bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold">
+                        СК
+                    </div>
+                    <div>
+                        <div class="text-sm font-semibold text-white">Сергій Кравченко</div>
+                        <div class="text-xs text-yellow-400">★ ★ ★ ★ ★ (Студент Остапа)</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Review 3 -->
+            <div class="glass-card p-6 rounded-2xl border border-gray-800 flex flex-col justify-between">
+                <p class="text-gray-300 text-sm italic mb-6">
+                    "Раніше я дуже боявся говорити англійською. Yulianna Just пояснює граматику настільки просто та легко, що страх зник через тиждень!"
+                </p>
+                <div class="flex items-center gap-3 border-t border-gray-800 pt-4">
+                    <div class="w-10 h-10 rounded-full bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">
+                        ОП
+                    </div>
+                    <div>
+                        <div class="text-sm font-semibold text-white">Оксана Петренко</div>
+                        <div class="text-xs text-yellow-400">★ ★ ★ ★ ★ (Студентка Юліанни)</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Review Form -->
+        <div class="glass-card rounded-3xl p-6 sm:p-8 max-w-2xl mx-auto border border-gray-800">
+            <h3 class="text-xl font-bold font-heading text-white mb-2 text-center">Залишити свій відгук</h3>
+            <p class="text-xs text-gray-400 text-center mb-6">Ваша думка допомагає нам ставати кращими</p>
+
+            <form onsubmit="submitUserReview(event)" class="space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <input type="text" id="review-name" required placeholder="Ваше ім'я" class="w-full bg-gray-900/80 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
+                    <select id="review-teacher" class="w-full bg-gray-900/80 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500">
+                        <option value="Anna Miller">Ruslan Kluichko</option>
+                        <option value="Alex Rivers">Ostap Taras</option>
+                        <option value="Олена Коваленко">Yulianna Just</option>
+                    </select>
+                </div>
+                <textarea id="review-text" required rows="3" placeholder="Напишіть ваші враження від навчання..." class="w-full bg-gray-900/80 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-brand-500"></textarea>
+                
+                <button type="submit" class="w-full py-3 bg-brand-600 hover:bg-brand-500 text-white font-semibold rounded-xl text-sm transition-colors shadow-lg shadow-brand-500/20">
+                    Надіслати відгук
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="about" class="relative z-10 border-t border-gray-800/80 bg-gray-950/80 mt-16 py-12 px-4">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+            <div>
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-8 h-8 rounded-xl bg-brand-600 flex items-center justify-center text-white text-sm">
+                        <i class="fa-solid fa-bolt"></i>
+                    </div>
+                    <span class="text-xl font-bold font-heading">LinguaPrime</span>
+                </div>
+                <p class="text-xs text-gray-400 leading-relaxed">
+                    Сучасна онлайн-платформа вивчення англійської мови нового покоління з найкращими репетиторами.
+                </p>
+            </div>
+            <div>
+                <h4 class="text-sm font-semibold text-white mb-3">Навігація</h4>
+                <ul class="space-y-2 text-xs text-gray-400">
+                    <li><a href="#teachers" class="hover:text-white">Вчителі</a></li>
+                    <li><a href="#ratings" class="hover:text-white">Рейтинг</a></li>
+                    <li><a href="#reviews" class="hover:text-white">Відгуки</a></li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-sm font-semibold text-white mb-3">Контакти</h4>
+                <ul class="space-y-2 text-xs text-gray-400">
+                    <li><i class="fa-solid fa-envelope mr-1 text-brand-400"></i> bestrusik3@gmkail.com</li>
+                    <li><i class="fa-solid fa-phone mr-1 text-brand-400"></i> +380 (800) 500-700</li>
+                    <li><i class="fa-solid fa-location-dot mr-1 text-brand-400"></i> Львів, Україна + Вроцлав, Польща</li>
+                </ul>
+            </div>
+            <div>
+                <h4 class="text-sm font-semibold text-white mb-3">Слідкуйте за нами</h4>
+                <div class="flex gap-3 text-lg text-gray-400">
+                    <a href="#" class="hover:text-brand-400"><i class="fa-brands fa-instagram"></i></a>
+                    <a href="#" class="hover:text-brand-400"><i class="fa-brands fa-telegram"></i></a>
+                    <a href="#" class="hover:text-brand-400"><i class="fa-brands fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="max-w-7xl mx-auto pt-6 border-t border-gray-900 text-center text-xs text-gray-500">
+            © 2026 LinguaPrime. Всі права захищені.
+        </div>
+    </footer>
+
+    <!-- ==================== MODALS ==================== -->
+
+    <!-- TEACHER PROFILE MODAL -->
+    <div id="teacher-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="glass-card max-w-3xl w-full rounded-3xl p-6 sm:p-8 border border-gray-700 relative max-h-[90vh] overflow-y-auto">
+            <!-- Close Button -->
+            <button onclick="closeTeacherModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <!-- Modal Header Profile -->
+            <div class="flex flex-col sm:flex-row gap-6 items-start sm:items-center mb-6 pb-6 border-b border-gray-800">
+                <img id="modal-teacher-img" src="" class="w-24 h-24 rounded-2xl object-cover border-2 border-brand-500/50">
+                <div>
+                    <div class="flex items-center gap-2 mb-1">
+                        <h3 id="modal-teacher-name" class="text-2xl font-bold font-heading text-white"></h3>
+                        <span id="modal-teacher-rating" class="text-xs bg-yellow-500/10 text-yellow-400 px-2.5 py-1 rounded-full border border-yellow-500/30 font-bold"></span>
+                    </div>
+                    <p id="modal-teacher-role" class="text-xs font-semibold text-brand-400 uppercase tracking-wider mb-2"></p>
+                    <div class="text-xl font-bold text-white font-heading" id="modal-teacher-price"></div>
+                </div>
+            </div>
+
+            <!-- Modal Body Tabs/Details -->
+            <div class="space-y-6 text-sm text-gray-300">
+                <div>
+                    <h4 class="text-white font-semibold mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-user text-brand-400"></i> Про викладача
+                    </h4>
+                    <p id="modal-teacher-bio" class="leading-relaxed text-gray-400"></p>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-semibold mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-graduation-cap text-accent-purple"></i> Спеціалізація та навички
+                    </h4>
+                    <div id="modal-teacher-skills" class="flex flex-wrap gap-2"></div>
+                </div>
+
+                <!-- Video Intro Placeholder -->
+                <div>
+                    <h4 class="text-white font-semibold mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-video text-accent-cyan"></i> Відео-візитка
+                    </h4>
+                    <div class="w-full h-44 rounded-2xl bg-gray-900 border border-gray-800 flex items-center justify-center relative overflow-hidden group cursor-pointer" onclick="playMockVideo()">
+                        <div class="w-14 h-14 rounded-full bg-brand-600/90 flex items-center justify-center text-white text-xl shadow-lg group-hover:scale-110 transition-transform">
+                            <i class="fa-solid fa-play ml-1"></i>
+                        </div>
+                        <span class="absolute bottom-3 left-4 text-xs text-gray-400">Переглянути 1 хв відео привітання</span>
+                    </div>
+                </div>
+
+                <!-- Booking Action -->
+                <div class="pt-4 border-t border-gray-800 flex flex-col sm:flex-row items-center justify-between gap-4">
+                    <div class="text-xs text-gray-400">
+                        <i class="fa-solid fa-calendar-check text-green-400 mr-1"></i> Найближче вільне вікно: <span class="text-white font-semibold">Сьогодні о 18:00</span>
+                    </div>
+                    <button id="book-btn" onclick="confirmBooking()" class="w-full sm:w-auto px-8 py-3 bg-gradient-to-r from-brand-600 to-accent-purple hover:opacity-95 text-white font-bold rounded-xl shadow-lg shadow-brand-500/30 transition-all">
+                        Забронювати пробний урок
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PERSONAL CABINET MODAL -->
+    <div id="cabinet-modal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-md flex items-center justify-center p-4 hidden">
+        <div class="glass-card max-w-4xl w-full rounded-3xl p-6 sm:p-8 border border-gray-700 relative max-h-[90vh] overflow-y-auto">
+            <!-- Close Button -->
+            <button onclick="toggleCabinetModal()" class="absolute top-5 right-5 text-gray-400 hover:text-white w-9 h-9 rounded-full bg-gray-800 flex items-center justify-center">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+
+            <!-- User Header -->
+            <div class="flex flex-col sm:flex-row items-center justify-between gap-6 pb-6 border-b border-gray-800">
+                <div class="flex items-center gap-4">
+                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-brand-500 to-accent-cyan flex items-center justify-center text-white text-2xl font-bold font-heading shadow-md">
+                        ОК
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold font-heading text-white">Олександр Коваль</h3>
+                        <p class="text-xs text-gray-400">Студент • Поточний рівень: <span class="text-brand-400 font-bold">B2 Upper-Intermediate</span></p>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <div class="bg-gray-900 px-4 py-2 rounded-xl border border-gray-800 text-center">
+                        <span class="text-xs text-gray-400 block">Баланс уроків:</span>
+                        <span id="user-balance" class="text-lg font-bold text-emerald-400">4 заняття</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 my-6">
+                <div class="bg-gray-900/60 p-4 rounded-2xl border border-gray-800/80">
+                    <div class="text-xs text-gray-400 mb-1">Пройдено уроків</div>
+                    <div class="text-2xl font-bold text-white font-heading">28 год</div>
+                </div>
+                <div class="bg-gray-900/60 p-4 rounded-2xl border border-gray-800/80">
+                    <div class="text-xs text-gray-400 mb-1">Вивчено нових слів</div>
+                    <div class="text-2xl font-bold text-accent-purple font-heading">450+</div>
+                </div>
+                <div class="bg-gray-900/60 p-4 rounded-2xl border border-gray-800/80">
+                    <div class="text-xs text-gray-400 mb-1">Середня оцінка HW</div>
+                    <div class="text-2xl font-bold text-yellow-400 font-heading">9.6 / 10</div>
+                </div>
+            </div>
+
+            <!-- Upcoming Lessons Schedule -->
+            <div class="mb-6">
+                <h4 class="text-white font-bold font-heading text-lg mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-clock-rotate-left text-brand-400"></i> Заплановані заняття
+                </h4>
+                
+                <div id="booked-lessons-list" class="space-y-3">
+                    <div class="bg-gray-900/80 p-4 rounded-2xl border border-gray-800 flex items-center justify-between">
+                        <div class="flex items-center gap-3">
+                            <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=100" class="w-10 h-10 rounded-xl object-cover">
+                            <div>
+                                <div class="text-sm font-semibold text-white">Урок з Ruslan Kliuchko</div>
+                                <div class="text-xs text-gray-400">Завтра • 18:00 - 19:00 (IELTS Speaking Prep)</div>
+                            </div>
+                        </div>
+                        <span class="text-xs bg-emerald-500/10 text-emerald-400 px-3 py-1 rounded-full border border-emerald-500/20 font-semibold">
+                            Підтверджено
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Balance Top Up Section -->
+            <div class="bg-gradient-to-r from-brand-900/40 to-purple-900/40 p-5 rounded-2xl border border-brand-500/30 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div>
+                    <h5 class="text-white font-bold text-sm">Бажаєте поповнити баланс?</h5>
+                    <p class="text-xs text-gray-300">При покупці пакету від 10 уроків знижка 15%</p>
+                </div>
+                <button onclick="topUpBalance()" class="px-5 py-2.5 bg-brand-500 hover:bg-brand-400 text-white font-semibold rounded-xl text-xs transition-colors shadow-md">
+                    + Придбати пакет уроків
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- NOTIFICATION TOAST -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 bg-gray-900 border border-brand-500 text-white px-5 py-3.5 rounded-2xl shadow-2xl flex items-center gap-3 translate-y-20 opacity-0 transition-all duration-300 pointer-events-none">
+        <i class="fa-solid fa-circle-check text-emerald-400 text-xl"></i>
+        <span id="toast-message" class="text-sm font-medium"></span>
+    </div>
+
+    <!-- JS Logic -->
+    <script>
+        // Data for Teachers
+        const teachersData = [
+            {
+                name: "Ostap Taras",
+                role: "Native Speaker (Львів)",
+                price: "250 грн/год",
+                rating: "★ 2",
+                img: "ostap.png",
+                bio: "Дипломований викладач з Кембриджським сертифікатом CELTA. Проживаю у Львові. Понад 20 років спеціалізуюся на підготовці студентів до складання IELTS Academic/General та вступи до європейських ВНЗ.",
+                skills: ["IELTS/TOEFL", "Розмовна англійська", "Підготовка до закордону", "C1-C2 рівня"]
+            },
+            {
+                name: "Ruslan Kliuchko",
+                role: "Business English & IT Specialist",
+                price: "250 грн/год",
+                rating: "★ 2",
+                img: "ruslan.png",
+                bio: "Маю понад 2 років досвіду роботи в американських IT-компаніях. Навчаю не просто мові, а специфіці проходження технічних співбесід, ділового листування та виступів на конференціях.",
+                skills: ["IT English", "Business Correspondence", "Job Interview Prep", "B1-C1"]
+            },
+            {
+                name: "Yulianna Just",
+                role: "Розмовна англійська для початківців",
+                price: "1000 грн/год",
+                rating: "★ 5.0",
+                img: "yu.jpg",
+                bio: "Засновник власної методики подолання мовного бар'єру за 30 днів. Мої уроки завжди проходять у дружній та невимушеній атмосфері з інтерактивними іграми та серіалами.",
+                skills: ["Англійська з нуля (A0-A2)", "Зняття мовного бар'єру", "Граматика просто", "Speaking Club"]
+            }
+        ];
+
+        let selectedTeacherIndex = 0;
+        let userLessonCount = 4;
+
+        // Open Teacher Modal
+        function openTeacherModal(index) {
+            selectedTeacherIndex = index;
+            const teacher = teachersData[index];
+
+            document.getElementById('modal-teacher-img').src = teacher.img;
+            document.getElementById('modal-teacher-name').innerText = teacher.name;
+            document.getElementById('modal-teacher-role').innerText = teacher.role;
+            document.getElementById('modal-teacher-rating').innerText = teacher.rating;
+            document.getElementById('modal-teacher-price').innerText = teacher.price;
+            document.getElementById('modal-teacher-bio').innerText = teacher.bio;
+
+            const skillsContainer = document.getElementById('modal-teacher-skills');
+            skillsContainer.innerHTML = '';
+            teacher.skills.forEach(skill => {
+                const tag = document.createElement('span');
+                tag.className = 'text-xs bg-gray-800 text-brand-300 px-3 py-1 rounded-lg border border-gray-700';
+                tag.innerText = skill;
+                skillsContainer.appendChild(tag);
+            });
+
+            document.getElementById('teacher-modal').classList.remove('hidden');
+        }
+
+        function closeTeacherModal() {
+            document.getElementById('teacher-modal').classList.add('hidden');
+        }
+
+        // Toggle Cabinet
+        function toggleCabinetModal() {
+            const modal = document.getElementById('cabinet-modal');
+            modal.classList.toggle('hidden');
+        }
+
+        // Toggle Mobile Menu
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // Confirm Lesson Booking
+        function confirmBooking() {
+            const teacher = teachersData[selectedTeacherIndex];
+            closeTeacherModal();
+
+            // Add to User Cabinet List
+            const list = document.getElementById('booked-lessons-list');
+            const item = document.createElement('div');
+            item.className = 'bg-gray-900/80 p-4 rounded-2xl border border-gray-800 flex items-center justify-between';
+            item.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <img src="${teacher.img}" class="w-10 h-10 rounded-xl object-cover">
+                    <div>
+                        <div class="text-sm font-semibold text-white">Урок з ${teacher.name}</div>
+                        <div class="text-xs text-gray-400">П'ятниця • 15:00 - 16:00 (Пробне заняття)</div>
+                    </div>
+                </div>
+                <span class="text-xs bg-brand-500/20 text-brand-400 px-3 py-1 rounded-full border border-brand-500/30 font-semibold">
+                    Забронювано
+                </span>
+            `;
+            list.prepend(item);
+
+            // Confetti
+            confetti({
+                particleCount: 100,
+                spread: 70,
+                origin: { y: 0.6 }
+            });
+
+            showToast(`Урок з ${teacher.name} успішно заміброньовано!`);
+        }
+
+        // Submit Review
+        function submitUserReview(e) {
+            e.preventDefault();
+            const name = document.getElementById('review-name').value;
+            const teacherName = document.getElementById('review-teacher').value;
+            const text = document.getElementById('review-text').value;
+
+            const container = document.getElementById('reviews-container');
+            const card = document.createElement('div');
+            card.className = 'glass-card p-6 rounded-2xl border border-gray-800 flex flex-col justify-between border-brand-500/30';
+            card.innerHTML = `
+                <p class="text-gray-300 text-sm italic mb-6">"${text}"</p>
+                <div class="flex items-center gap-3 border-t border-gray-800 pt-4">
+                    <div class="w-10 h-10 rounded-full bg-brand-500/20 text-brand-400 flex items-center justify-center font-bold">
+                        ${name.substring(0,2).toUpperCase()}
+                    </div>
+                    <div>
+                        <div class="text-sm font-semibold text-white">${name}</div>
+                        <div class="text-xs text-yellow-400">★ ★ ★ ★ ★ (Студент ${teacherName})</div>
+                    </div>
+                </div>
+            `;
+            container.prepend(card);
+
+            document.getElementById('review-name').value = '';
+            document.getElementById('review-text').value = '';
+
+            showToast("Дякуємо! Ваш відгук успішно додано.");
+        }
+
+        // Top Up Balance Mock
+        function topUpBalance() {
+            userLessonCount += 10;
+            document.getElementById('user-balance').innerText = `${userLessonCount} занять`;
+            showToast("Баланс успішно поповнено на +10 уроків!");
+        }
+
+        // Toast Helper
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            document.getElementById('toast-message').innerText = msg;
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            
+            setTimeout(() => {
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3500);
+        }
+
+        function playMockVideo() {
+            showToast("Відтворення відео-візитки викладача...");
+        }
+    </script>
+</body>
+</html>
